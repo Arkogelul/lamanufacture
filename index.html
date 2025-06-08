@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Manufacture</title>
+
+  <!-- Chargement de Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth; /* Permet un défilement fluide lors des clics sur les ancres */
+    }
+
+    /* Styles pour la vidéo en arrière-plan du header */
+    .video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Remplit l'espace sans déformation */
+      z-index: -1; /* Passe derrière les autres éléments */
+    }
+
+    .video-full-height video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="relative bg-white text-black font-sans">
+
+  <!-- Bouton hamburger pour afficher le menu sur mobile -->
+  <button id="hamburger" class="fixed top-4 left-4 z-50 md:hidden p-2 bg-white/80 rounded shadow">
+    <!-- Icône burger (SVG) -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+
+  <!-- Menu latéral : fixe sur desktop, slide sur mobile -->
+  <aside id="mobile-menu"
+    class="fixed top-0 left-0 h-full w-64 bg-white z-40 transform -translate-x-full transition-transform duration-300
+           md:translate-x-0 md:w-32 md:flex md:flex-col md:items-center md:justify-center md:space-y-4
+           md:bg-white/70 md:backdrop-blur-md md:text-sm md:uppercase md:font-semibold md:text-gray-700">
+    <!-- Liens de navigation qui pointent vers des sections de la page -->
+    <a href="#accueil">Accueil</a>
+    <a href="#formation">Formation Pro</a>
+    <a href="#tout-public">Tout Public</a>
+    <a href="#enfants">Enfants</a>
+    <a href="#ado">Ados</a>
+    <a href="#workshop">Workshop</a>
+    <a href="#offrez">Offrez-vous</a>
+    <a href="#contact">Contact</a>
+  </aside>
+
+  <!-- Section d'accueil avec une vidéo de fond -->
+  <header id="accueil" class="relative h-screen flex items-center justify-center text-white pl-0 md:pl-32">
+    <video autoplay muted loop playsinline class="video-bg">
+      <source src="videos/tiffaine.mp4" type="video/mp4">
+    </video>
+
+    <!-- Contenu affiché par-dessus la vidéo -->
+    <div class="relative z-10 flex flex-col items-center justify-center w-full px-6 md:px-16">
+      <!-- Logo -->
+      <img src="images/LOGO_LA-MANUFACTURE_BLANC.png" alt="Logo" class="mx-auto mb-6 w-40 md:w-70 lg:w-60 h-auto">
+      
+      <!-- Titre principal -->
+      <h1 class="text-5xl md:text-6xl font-bold tracking-wide uppercase text-center">La Manufacture</h1>
+      <p class="mt-2 text-lg md:text-xl italic text-center">Prochaine audition : 10 août 2025</p>
+
+      <!-- Bouton vers le formulaire -->
+      <a href="#formulaire-inscription" class="inline-block group mt-6">
+          <div class="border border-white px-6 py-2 text-white uppercase font-semibold text-sm group-hover:bg-white group-hover:text-black transition">
+            S'inscrire maintenant
+          </div>
+
+      </a>
+
+      <!-- Bloc d’actualité à droite sur desktop -->
+      <div class="mt-6 w-full md:w-64 bg-white/80 text-black p-6 backdrop-blur-md md:absolute md:right-0 md:top-0 md:h-full md:flex md:flex-col md:justify-between">
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Actu / Stages / Spectacles</h2>
+          <ul class="text-sm space-y-2">
+            <li>- Stage Jazz le 21/07</li>
+            <li>- Spectacle enfants 03/08</li>
+            <li>- Résidence Hip-Hop Août</li>
+          </ul>
+        </div>
+        <div class="text-xs italic text-right mt-4 md:mt-0">Mis à jour le 8 juin 2025</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section galerie -->
+  <section class="bg-blue-100 text-black py-16 text-center pl-0 md:pl-32">
+    <h2 class="text-2xl font-bold mb-6 uppercase">Galerie / Témoignages</h2>
+    <p>📸 Carousel photo ou citations ici (à intégrer)</p>
+  </section>
+
+  <!-- Template HTML invisible utilisé pour générer les sections dynamiquement -->
+  <template id="section-template">
+    <section class="h-screen flex items-center bg-white text-black pl-0 md:pl-32">
+      <div class="flex flex-col md:flex-row w-full h-full">
+        <div class="flex items-center justify-center w-full md:w-1/2 p-6">
+          <div>
+            <h3 class="section-title text-3xl font-bold uppercase mb-6"></h3>
+            <p class="section-text text-lg leading-relaxed"></p>
+          </div>
+        </div>
+        <div class="video-full-height w-full md:w-1/2 h-full">
+          <video autoplay muted loop playsinline class="w-full h-full object-cover">
+            <source class="section-video" src="" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Conteneur dans lequel les sections dynamiques sont injectées -->
+  <div id="sections"></div>
+
+  <!-- Section de contact avec coordonnées -->
+<section
+  id="contact"
+  class="-100 text-black px-6 md:px-20  py-20
+         pl-0 md:pl-32            /* décalage pour le menu fixe desktop */
+         mx-6 md:mx-0             /* ⇦ marge sur mobile, 0 sur desktop */
+         my-16                    /* marge verticale facultative */
+">    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-10">
+      <div>
+        <h3 class="text-3xl font-bold uppercase mb-6">Contact</h3>
+        <p class="mb-4 text-lg">Adresse : 123 Rue de la Danse, Paris</p>
+        <p class="mb-4 text-lg">Téléphone : 01 23 45 67 89</p>
+        <p class="mb-4 text-lg">Email : contact@lamanufacture.fr</p>
+        <div class="flex space-x-4 mt-6">
+          <a href="#" class="text-blue-600 hover:text-blue-800">Facebook</a>
+          <a href="#" class="text-blue-600 hover:text-blue-800">Instagram</a>
+          <a href="#" class="text-blue-600 hover:text-blue-800">YouTube</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Carte Google Maps en plein écran -->
+  <section class="w-full h-[250px]">
+    <iframe
+      class="w-full h-full"
+      src="https://www.google.com/maps/embed?... (URL tronquée pour clarté)"
+      allowfullscreen=""
+      loading="lazy"
+    ></iframe>
+  </section>
+
+  <!-- Pied de page -->
+  <footer class="bg-gray-200 text-center text-sm py-4 pl-0 md:pl-32">
+    &copy; 2025 La Manufacture. Tous droits réservés.
+  </footer>
+
+  <!-- Script pour générer les sections dynamiques depuis des données JavaScript -->
+  <script>
+    const container = document.getElementById("sections");
+    const template = document.getElementById("section-template");
+
+    // Données des différentes sections (titre, texte, vidéo)
+    const data = 
+    [
+      { id: "formation", 
+      title: "Formation Professionnelle", 
+      text: "Un programme complet pour intégrer les exigences de la scène : entraînements quotidiens, travail chorégraphique intensif et accompagnement individuel vers l’insertion professionnelle.", 
+      video: "videos/tiffaine.mp4" },
+
+      { id: "tout-public", 
+      title: "Tout Public & Adultes", 
+      text: "Des cours adaptés à tous les niveaux, avec une approche bienveillante et progressive. Que vous soyez débutant ou expérimenté, venez vous exprimer en mouvement.", 
+      video: "videos/tiffaine.mp4" },
+
+      { id: "enfants", 
+      title: "Enfants", 
+      text: "Des ateliers ludiques pour explorer le rythme, la coordination et la créativité dès le plus jeune âge. Une première rencontre joyeuse avec l’univers de la danse.", 
+      video: "videos/tiffaine.mp4" },
+
+      { id: "ado",
+      title: "Adolescents", 
+      text: "Un espace d’expression libre et affirmée, pour développer son identité artistique tout en apprenant des techniques actuelles comme le street jazz ou le contemporain.", 
+      video: "videos/tiffaine.mp4" },
+
+      { id: "workshop", 
+      title: "Workshops", 
+      text: "Stages intensifs, rencontres avec des artistes invités et immersion dans différents styles pour enrichir votre pratique et élargir vos horizons.", 
+      video: "videos/tiffaine.mp4" },
+
+      { id: "offrez", 
+      title: "Offrez-vous la Manu", 
+      text: "Une carte cadeau ou un pass découverte pour partager la passion de la danse avec vos proches. Une idée originale et pleine d’élan à offrir.", 
+      video: "videos/tiffaine.mp4" }
+    ];
+
+    // Pour chaque entrée, on clone le template et on remplit avec les données
+    data.forEach(section => {
+      const clone = template.content.cloneNode(true);
+      clone.querySelector(".section-title").textContent = section.title;
+      clone.querySelector(".section-text").textContent = section.text;
+      clone.querySelector(".section-video").src = section.video;
+
+      const wrapper = document.createElement("div");
+      wrapper.id = section.id;
+      wrapper.appendChild(clone);
+      container.appendChild(wrapper);
+
+      // Ajout d'une image fixe entre chaque section (effet de séparation visuelle)
+      const image = document.createElement('div');
+      image.className = 'w-full h-[300px] bg-fixed bg-center bg-cover';
+      image.style.backgroundImage = `url(images/julie.jpg)`;
+      container.appendChild(image);
+    });
+  </script>
+
+  <!-- Script pour ouvrir/fermer le menu hamburger -->
+  <script>
+    const hamburger = document.getElementById("hamburger");
+    const menu = document.getElementById("mobile-menu");
+
+    // Ouvre ou ferme le menu quand on clique sur le burger
+    hamburger.addEventListener("click", () => {
+      menu.classList.toggle("-translate-x-full");
+    });
+
+    // Ferme le menu si un lien est cliqué (sur mobile uniquement)
+    document.querySelectorAll("#mobile-menu a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth < 768) {
+          menu.classList.add("-translate-x-full");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
